@@ -11,14 +11,54 @@
   }
   </style>
 </head>
-<body onload="initState()">
-  <canvas id="mainCanvas" width="400" height="400"></canvas>
+<body>
+  <canvas id="canvas0" width="400" height="400"></canvas>
+  <canvas id="canvas1" width="100" height="100"></canvas>
+  <canvas id="canvas2" width="100" height="100"></canvas>
   <script type="text/javascript">
-    function initState() {
-      const canvas = document.getElementById('mainCanvas');
-      const ctx = canvas.getContext('2d');
-      ctx.strokeRect(20, 20, 360, 360)
+    let i = 0;
+    while (true) {
+      this[`ctx${i}`] = document.querySelector(`#canvas${i}`).getContext('2d');
+      i++;
+      if(!document.querySelector(`#canvas${i}`)) {
+        break;
+      }
     }
+    function square() {     
+      this.ctx0.fillRect(20, 20, 300, 300);
+      this.ctx0.clearRect(25, 25, 250, 250);
+      this.ctx0.strokeRect(30, 30, 100, 100);
+    }
+
+    function twoTriangle () {
+      function strokeTriangle() {
+        this.ctx1.beginPath();
+        this.ctx1.moveTo(20, 20) //只是移动
+        this.ctx1.lineTo(20, 40) //划线
+        this.ctx1.lineTo(40, 20)
+        this.ctx1.closePath();
+        this.ctx1.stroke();
+      }
+
+      function fillTriangle() {
+        this.ctx1.beginPath(); //可以和上个笔触区分开
+        this.ctx1.moveTo(40, 60) //只是移动
+        this.ctx1.lineTo(60, 60) //划线
+        this.ctx1.lineTo(60, 40)
+        this.ctx1.fill()
+      }
+      strokeTriangle();
+      fillTriangle();
+    }
+
+    function circle() {
+      this.ctx2.arc(30, 30, 20,Math.PI/2, 0, true)
+      this.ctx2.stroke()
+    }
+
+    circle()
+    square()
+    twoTriangle()
   </script>
 </body>
 </html>
