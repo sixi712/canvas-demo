@@ -14,7 +14,12 @@
 <body>
   <canvas id="canvas0" width="400" height="400"></canvas>
   <canvas id="canvas1" width="100" height="100"></canvas>
-  <canvas id="canvas2" width="100" height="100"></canvas>
+  <canvas id="canvas2" width="800" height="800"></canvas>
+  <canvas id="canvas3" width="100" height="100"></canvas>
+  <canvas id="canvas4" width="1500" height="1000"></canvas>
+  <script src="digit.js"></script>  
+  <script src="countDown.js"></script>
+
   <script type="text/javascript">
     let i = 0;
     while (true) {
@@ -38,6 +43,7 @@
         this.ctx1.lineTo(40, 20)
         this.ctx1.closePath();
         this.ctx1.stroke();
+        this.ctx1.closePath();
       }
 
       function fillTriangle() {
@@ -51,11 +57,42 @@
       fillTriangle();
     }
 
-    function circle() {
-      this.ctx2.arc(30, 30, 20,Math.PI/2, 0, true)
-      this.ctx2.stroke()
+    function tangram() {
+      const colorList = [
+        {p: [{x:0, y: 0}, {x:800, y:0}, {x:400, y:400}], color: "#caff67"}, 
+        {p: [{x:0, y:0}, {x:400, y:400}, {x:0, y:800}], color: "#67becf"},
+        {p: [{x:800, y:0}, {x:800, y:400}, {x:600, y:600}, {x:600, y:200}], color: "#ef3d61"}, 
+        {p: [{x:600, y:200}, {x:600, y:600}, {x:400, y:400}], color: "#f9f51a"},
+        {p: [{x:400, y:400}, {x:600, y:600}, {x:400, y:800}, {x:200, y:600}], color: "#a594c0"}, 
+        {p: [{x:200, y:600}, {x:400, y:800}, {x:0, y:800}], color: "#fa8ecc"}, 
+        {p: [{x:800, y:400}, {x:800, y:800}, {x:400, y:800}], color: "#f6ca29"}
+      ];
+      colorList.forEach(item=>{
+        const ctx2 = this.ctx2;
+        ctx2.beginPath();
+        item.p.forEach((point, index)=>{
+          if(index === 0) {
+            ctx2.moveTo(point.x, point.y)
+          }else {
+            ctx2.lineTo(point.x, point.y)
+          }
+        })
+        ctx2.fillStyle = item.color;
+        ctx2.fill();
+        ctx2.lineWidth = 3;
+        ctx2.strokeStyle = "#0000000"
+        ctx2.stroke();
+        ctx2.closePath(); //这个值会首尾相连，可以不用， fill也会起作用
+      })
     }
 
+    function circle() {
+      this.ctx3.arc(30, 30, 20,Math.PI/2, 0, true)
+      this.ctx3.stroke()
+    }
+    
+
+    tangram()
     circle()
     square()
     twoTriangle()
