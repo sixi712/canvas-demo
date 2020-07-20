@@ -68,7 +68,7 @@
         {p: [{x:800, y:400}, {x:800, y:800}, {x:400, y:800}], color: "#f6ca29"}
       ];
       colorList.forEach(item=>{
-        const ctx2 = this.ctx2;
+        let ctx2 = this.ctx2;
         ctx2.beginPath();
         item.p.forEach((point, index)=>{
           if(index === 0) {
