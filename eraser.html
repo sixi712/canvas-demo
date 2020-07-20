@@ -34,9 +34,10 @@
       const canvasDom = document.querySelector("#canvasDom")
       let ctx = canvasDom.getContext('2d');
       const image = document.querySelector("#image");
-      let canClear = false;
+      let canClear = false, hasDone= false;
       const showBox = document.querySelector("#showBox");
       const {offsetWidth, offsetHeight} = showBox;
+      let clearFunc = clearCoverB();
       canvasDom.width = offsetWidth,
       canvasDom.height = offsetHeight,
 
@@ -51,29 +52,73 @@
       ctx.closePath();
       ctx.globalCompositeOperation="destination-out";
       window.addEventListener("mousedown", ()=>{canClear = true})
-      window.addEventListener("mouseup", ()=>{canClear = false})
+      window.addEventListener("mouseup", ()=>{canClear = false; clearFunc = clearCoverB()})
       showBox.addEventListener("mousemove", getPositionMouse)
       showBox.addEventListener("touchmove", getPositionTouch)
+      showBox.addEventListener("touchend", ()=>{clearFunc = clearCoverB()})
 
       function getPositionMouse(e) {
         if(canClear) {
-          clearCover(e.clientX, e.clientY)
+          // clearCoverA(e.clientX, e.clientY)
+          clearFunc(e.clientX, e.clientY)
         }
      }
 
      function getPositionTouch(e) {
         event.preventDefault(); //先去除默认的响应行为
         const touch = event.touches[0]; //获取触摸的第一个点
-        clearCover(touch.pageX, touch.pageY)
+        // clearCoverA(touch.pageX, touch.pageY)
+        clearFunc(touch.pageX, touch.pageY)
      }
 
-     function clearCover(x, y) {
+     function clearCoverA(x, y) {
         const { left, top } = canvasDom.getBoundingClientRect()
+        // 这个方法会出现一个问题，划得太快，圆会跟不上
         ctx.beginPath();
         ctx.arc(x - left, y - top, 10, 0, Math.PI * 2)
         ctx.fillStyle = "rgba(0,0,0,1)"
         ctx.fill();
-        ctx.closePath();
+        checkIsDone();
+     }
+
+     function clearCoverB () {
+      const { left, top } = canvasDom.getBoundingClientRect()
+      let position = null;
+      return (x, y) => {
+          x = x - left;
+          y = y - top;
+          if(!position) {
+            ctx.beginPath();
+            ctx.lineCap="round";
+            ctx.lineWidth = 20;
+            ctx.moveTo(x, y);
+            position = [x, y]
+          }else {
+            console.log(x, y)
+            ctx.lineTo(x, y)
+            ctx.stroke();
+          }
+          checkIsDone();
+        }
+     }
+
+     function checkIsDone() {
+        const allImageData = ctx.getImageData(0, 0, offsetWidth, offsetHeight).data;
+        const dataLength = allImageData.length;
+        let transparent = 0;
+        for(let i = 0;i<dataLength;i +=4) {
+          if(allImageData[i+3] < 10) {
+            transparent ++
+            if(transparent / (dataLength/4) > 0.6 && !hasDone) {
+              alert("done")
+              hasDone = true;
+              ctx.clearRect(0, 0, offsetWidth, offsetHeight)
+              showBox.removeEventListener("mousemove", getPositionMouse)
+              showBox.removeEventListener("touchmove", getPositionTouch)
+              clearFunc = null;
+            }
+          }
+        }
      }
 
   </script>
