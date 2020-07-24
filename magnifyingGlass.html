@@ -35,7 +35,7 @@
       function formatPosition(info) {
         const defaultValue = e[`layer${info === "width" ? "X" : "Y"}`]/scaling
         if(defaultValue + 75 > firstImage[info]) {
-          return firstImage.width - 150
+          return firstImage[info] - 150
         }else if(defaultValue - 75 < 0) {
           return 0
         }else {
