@@ -32,9 +32,19 @@
 
     function magnifyImage(e) {
       if(!canUse) return;
+      function formatPosition(info) {
+        const defaultValue = e[`layer${info === "width" ? "X" : "Y"}`]/scaling
+        if(defaultValue + 75 > firstImage[info]) {
+          return firstImage.width - 150
+        }else if(defaultValue - 75 < 0) {
+          return 0
+        }else {
+          return defaultValue - 75
+        }
+      }
       const positionStart = {
-        x: e.layerX/scaling + 75 >firstImage.width? firstImage.width - 150 : e.layerX/scaling - 75,
-        y: e.layerY/scaling + 75 >firstImage.height? firstImage.height - 150 : e.layerY/scaling - 75
+        x: formatPosition("width"),
+        y: formatPosition("height")
       }
       const canvas = document.querySelector("#secCanvas");
       const ctx = canvas.getContext("2d");
