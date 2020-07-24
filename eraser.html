@@ -31,6 +31,10 @@
   </div>
 
   <script type="text/javascript">
+
+  // 这个项目有两个新的点，globalCompositeOperation和getImageData
+
+  
       const canvasDom = document.querySelector("#canvasDom")
       let ctx = canvasDom.getContext('2d');
       const image = document.querySelector("#image");
@@ -94,7 +98,6 @@
             ctx.moveTo(x, y);
             position = [x, y]
           }else {
-            console.log(x, y)
             ctx.lineTo(x, y)
             ctx.stroke();
           }

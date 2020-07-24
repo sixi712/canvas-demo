@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style type="text/css">
+  html,body {
+    margin: 0;
+    padding: 0;
+  }
+  </style>
+</head>
+<body>
+  <canvas id="mainCanvas" style="border: 1px #f0f0f0 solid;margin:20px"></canvas>
+  <canvas id="secCanvas" width="300" height="300" style="border: 1px #f0f0f0 solid"></canvas>
+  <script>
+    const firstImage = new Image();
+    firstImage.src = "./images/1.jpg";
+    const scaling = 0.5;
+    let canUse = false;
+    firstImage.onload = ()=>{canUse = true;initMain();};
+    function initMain() {
+      const canvas = document.querySelector("#mainCanvas");
+      const ctx = canvas.getContext("2d");
+      const size = {width: firstImage.width * scaling, height: firstImage.height * scaling}
+      canvas.width = size.width;
+      canvas.height = size.height;
+      ctx.drawImage(firstImage, 0, 0, size.width, size.height)
+      canvas.addEventListener("mousemove", magnifyImage)
+    }
+
+    function magnifyImage(e) {
+      if(!canUse) return;
+      const positionStart = {
+        x: e.layerX/scaling + 75 >firstImage.width? firstImage.width - 150 : e.layerX/scaling - 75,
+        y: e.layerY/scaling + 75 >firstImage.height? firstImage.height - 150 : e.layerY/scaling - 75
+      }
+      const canvas = document.querySelector("#secCanvas");
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(firstImage, positionStart.x, positionStart.y, 150, 150, 0, 0, 300, 300)
+    }
+    
+  </script>
+</body>
+</html>
