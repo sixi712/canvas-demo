@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style type="text/css">
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  </style>
+</head>
+<body>
+  <canvas id="mainCanvas" style="border: 1px #f0f0f0 solid;"></canvas>
+  <script>
+    const canvasDom = document.querySelector("#mainCanvas");
+    const ctx = canvasDom.getContext("2d");
+    const rate = 0.5;
+    let imageOnload = false;
+    let bgImage = new Image();
+    let size = null;
+    bgImage.src = "./images/1.jpg"
+    bgImage.onload = () => {
+      imageOnload = true
+      size = {
+        finalWidth: bgImage.width * 0.5,
+        finalHeight: bgImage.height * 0.5,
+      }
+      canvasDom.width = size.finalWidth;
+      canvasDom.height = size.finalHeight;
+      ctx.drawImage(bgImage, 0, 0, size.finalWidth, size.finalHeight)
+    }
+    let handleZoomImage = zoomImage();
+    canvasDom.addEventListener("mousewheel", handleZoomImage)
+
+    function zoomImage() {
+      let zoom = 1, Ox = 0, Oy = 0;  
+      return e => {
+        ctx.save()
+        const {offsetX, offsetY, wheelDeltaY} = e;
+        ctx.clearRect(0, 0, size.finalWidth, size.finalHeight)
+        zoom -= e.deltaY / 1200
+        ctx.translate(Ox, Oy)
+        ctx.scale(zoom, zoom);
+        ctx.drawImage(bgImage, 0, 0, size.finalWidth*zoom, size.finalHeight*zoom)
+      }
+    }
+  </script>
+</body>
+</html>
