@@ -12,6 +12,7 @@
   </style>
 </head>
 <body>
+  <p>滚轮缩放</p>
   <canvas id="mainCanvas" style="border: 1px #f0f0f0 solid;"></canvas>
   <script>
     const canvasDom = document.querySelector("#mainCanvas");
@@ -35,15 +36,17 @@
     canvasDom.addEventListener("mousewheel", handleZoomImage)
 
     function zoomImage() {
-      let zoom = 1, Ox = 0, Oy = 0;  
+      let zoom = 1;  
       return e => {
         ctx.save()
         const {offsetX, offsetY, wheelDeltaY} = e;
-        ctx.clearRect(0, 0, size.finalWidth, size.finalHeight)
+        ctx.clearRect(0, 0, canvasDom.width, canvasDom.height)
         zoom -= e.deltaY / 1200
-        ctx.translate(Ox, Oy)
-        ctx.scale(zoom, zoom);
+        ctx.translate(offsetX - offsetX*zoom, offsetY - offsetY*zoom)
         ctx.drawImage(bgImage, 0, 0, size.finalWidth*zoom, size.finalHeight*zoom)
+        ctx.restore() 
+        // 这其实有两种实现方式，一种就像这样，每次画完后让原点回来，还有一种是每次画是基于上一次的位置，接着画
+        // 感觉第二种有点坑，没有一个基准，后面会乱，就用第一种
       }
     }
   </script>

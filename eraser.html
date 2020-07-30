@@ -23,6 +23,7 @@
   </style>
 </head>
 <body>
+  <p>橡皮擦</p>
   <div style="position: relative;width: 500px;height: 288px;top:100px;left:100px" id="showBox">
     <img src="./images/1.jpg" alt="" width="100%" id = "image">
     <div id="canvasBox">
@@ -94,6 +95,7 @@
           if(!position) {
             ctx.beginPath();
             ctx.lineCap="round";
+            ctx.lineJoin = "round"; //快速滑动的时候会有个尖角，猜测是lineJoin引起
             ctx.lineWidth = 20;
             ctx.moveTo(x, y);
             position = [x, y]
@@ -113,7 +115,6 @@
           if(allImageData[i+3] < 10) {
             transparent ++
             if(transparent / (dataLength/4) > 0.6 && !hasDone) {
-              alert("done")
               hasDone = true;
               ctx.clearRect(0, 0, offsetWidth, offsetHeight)
               showBox.removeEventListener("mousemove", getPositionMouse)
