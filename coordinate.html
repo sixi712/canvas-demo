@@ -41,7 +41,7 @@
         ctx.save()
         const {offsetX, offsetY, wheelDeltaY} = e;
         ctx.clearRect(0, 0, canvasDom.width, canvasDom.height)
-        zoom -= e.deltaY / 1200
+        zoom = zoom - e.deltaY / 1200 < 0.2 ? 0.2 : zoom - e.deltaY / 1200
         ctx.translate(offsetX - offsetX*zoom, offsetY - offsetY*zoom)
         ctx.drawImage(bgImage, 0, 0, size.finalWidth*zoom, size.finalHeight*zoom)
         ctx.restore() 
